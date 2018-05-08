@@ -1,10 +1,15 @@
 import csv
 import numpy
 import glob
+import argparse
 
-kpx = open("savedata/kpx.txt", "a")
-kpy = open("savedata/kpy.txt", "a")
-kpdir = "savedata/keypoints/"
+ap = argparse.ArgumentParser()
+ap.add_argument("-i", "--image", required=True, help="Path to image folder")
+args = vars(ap.parse_args())
+
+kpx = open(args["image"] + "/savedata/kpx.txt", "a")
+kpy = open(args["image"] + "/savedata/kpy.txt", "a")
+kpdir = args["image"] + "/savedata/keypoints/"
 kpfilelist = sorted(glob.glob(kpdir + "*"))
 for kpfile in kpfilelist:
         reader = csv.reader(open(kpfile, "r"), delimiter=",")
@@ -19,8 +24,8 @@ kpx.close()
 kpy.close()
 
 
-center = open("savedata/centers.txt", "a")
-centerdir = "savedata/center/"
+center = open(args["image"] + "/savedata/centers.txt", "a")
+centerdir = args["image"] + "/savedata/center/"
 cplist = sorted(glob.glob(centerdir + "*"))
 for cpfile in cplist:
         reader = csv.reader(open(cpfile, "r"), delimiter=",")
@@ -31,8 +36,8 @@ for cpfile in cplist:
 center.close()
 
 
-scale = open("savedata/scale.txt", "a")
-scaledir = "savedata/scale/"
+scale = open(args["image"] + "/savedata/scale.txt", "a")
+scaledir = args["image"] + "/savedata/scale/"
 scalelist = sorted(glob.glob(scaledir + "*"))
 for scalefile in scalelist:
         reader = csv.reader(open(scalefile, "r"), delimiter=",")
