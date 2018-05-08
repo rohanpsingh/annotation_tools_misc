@@ -2,6 +2,7 @@ import argparse
 import csv
 import numpy as np
 import random
+import os
 
 train_len = 8
 
@@ -22,17 +23,20 @@ kpy_lines = kpy.readlines()
 cen_lines = boxc.readlines()
 sca_lines = boxs.readlines()
 
-imgl_train = open(args["dir"] + "img_names_train.txt", "w")
-kpx_train = open(args["dir"] + "kpx_train.txt", "w")
-kpy_train = open(args["dir"] + "kpy_train.txt", "w")
-boxc_train = open(args["dir"] + "centers_train.txt", "w")
-boxs_train = open(args["dir"] + "scale_train.txt", "w")
+os.mkdir(args["dir"] + "train")
+os.mkdir(args["dir"] + "valid")
 
-imgl_valid = open(args["dir"] + "img_names_valid.txt", "w")
-kpx_valid = open(args["dir"] + "kpx_valid.txt", "w")
-kpy_valid = open(args["dir"] + "kpy_valid.txt", "w")
-boxc_valid = open(args["dir"] + "centers_valid.txt", "w")
-boxs_valid = open(args["dir"] + "scale_valid.txt", "w")
+imgl_train = open(args["dir"] + "train/img_names.txt", "w")
+kpx_train = open(args["dir"] + "train/kpx.txt", "w")
+kpy_train = open(args["dir"] + "train/kpy.txt", "w")
+boxc_train = open(args["dir"] + "train/centers.txt", "w")
+boxs_train = open(args["dir"] + "train/scale.txt", "w")
+
+imgl_valid = open(args["dir"] + "valid/img_names.txt", "w")
+kpx_valid = open(args["dir"] + "valid/kpx.txt", "w")
+kpy_valid = open(args["dir"] + "valid/kpy.txt", "w")
+boxc_valid = open(args["dir"] + "valid/centers.txt", "w")
+boxs_valid = open(args["dir"] + "valid/scale.txt", "w")
 
 valid_inds = range(len(img_lines))
 train_inds = []
