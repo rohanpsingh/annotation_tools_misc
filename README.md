@@ -2,7 +2,10 @@
 Python scripts to annotate and visualize.
 
 Example usage for visAnnot.py:
-python visAnnot.py -i ~/examples/imagenames.txt -x ~/examples/kpx.txt -y ~/dat/kpy.txt -c ~/examples/center.txt -s ~/examples/scale.txt
+python visAnnot.py -i examples/imagenames.txt -x examples/kpx.txt -y examples/kpy.txt -c examples/center.txt -s examples/scale.txt
+
+Example usage for collect.py:
+python collect.py --image ~/JPEGImages/
 
 
 Keyboard options for annotImg.py:

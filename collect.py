@@ -7,8 +7,8 @@ ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required=True, help="Path to image folder")
 args = vars(ap.parse_args())
 
-kpx = open(args["image"] + "/savedata/kpx.txt", "a")
-kpy = open(args["image"] + "/savedata/kpy.txt", "a")
+kpx = open(args["image"] + "/savedata/kpx.txt", "w")
+kpy = open(args["image"] + "/savedata/kpy.txt", "w")
 kpdir = args["image"] + "/savedata/keypoints/"
 kpfilelist = sorted(glob.glob(kpdir + "*"))
 for kpfile in kpfilelist:
@@ -24,7 +24,7 @@ kpx.close()
 kpy.close()
 
 
-center = open(args["image"] + "/savedata/centers.txt", "a")
+center = open(args["image"] + "/savedata/centers.txt", "w")
 centerdir = args["image"] + "/savedata/center/"
 cplist = sorted(glob.glob(centerdir + "*"))
 for cpfile in cplist:
@@ -36,7 +36,7 @@ for cpfile in cplist:
 center.close()
 
 
-scale = open(args["image"] + "/savedata/scale.txt", "a")
+scale = open(args["image"] + "/savedata/scale.txt", "w")
 scaledir = args["image"] + "/savedata/scale/"
 scalelist = sorted(glob.glob(scaledir + "*"))
 for scalefile in scalelist:
