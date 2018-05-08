@@ -70,8 +70,8 @@ for i in range(0, len(imgnames)):
         scale = float(scales[i][0])
         
         image = draw_bbox(image, (cpx,cpy), scale)
-
-        for j in range(0, 6):
+        num_of_keypoints = len(kpxl[i])-1
+        for j in range(0, num_of_keypoints):
                 kpx = int(float(kpxl[i][j]))
                 kpy = int(float(kpyl[i][j]))
                 image = draw_kp(image, (kpx, kpy))
