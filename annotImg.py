@@ -15,6 +15,7 @@ refPt = []
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required=True, help="Path to the image")
 ap.add_argument("-f", "--file", required=True, help="Image name (relative)")
+ap.add_argument("-d", "--data", required=True, help="Path to savedata")
 args = vars(ap.parse_args())
  
 # load the image, clone it, and setup the mouse callback function
@@ -45,9 +46,9 @@ def click_and_crop(event, x, y, flags, param):
 		cropping = False
 		getROI = True
 
-kp_file = open("savedata/keypoints/keypoints_" + args["file"] + ".csv", "w")
-center_file = open("savedata/center/center_" + args["file"] + ".csv", "w")
-scale_file = open("savedata/scale/scale_" + args["file"] + ".txt", "w")
+kp_file = open(args["data"] + "/savedata/keypoints/keypoints_" + args["file"] + ".csv", "w")
+center_file = open(args["data"] + "/savedata/center/center_" + args["file"] + ".csv", "w")
+scale_file = open(args["data"] + "/savedata/scale/scale_" + args["file"] + ".txt", "w")
 
 def key_point(keyPt):
 	kp_file.write(repr(keyPt[0]) + "," + repr(keyPt[1]) + "\n")
@@ -121,7 +122,7 @@ while True:
 	 
 	# if the 'q' key is pressed, break from the loop
 	elif key == ord("q"):
-                imgfile = open("savedata/img_names.txt", "a")
+                imgfile = open(args["data"] + "/savedata/img_names.txt", "a")
                 imgfile.write(args["image"] + "\n")
                 imgfile.close()
 		kp_file.close()
