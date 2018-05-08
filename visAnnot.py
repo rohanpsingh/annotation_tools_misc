@@ -1,4 +1,3 @@
-# usage $ python click_and_crop.py --image sample.jpg
 # import the necessary packages
 import argparse
 import csv
@@ -8,18 +7,19 @@ import numpy as np
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", required=True, help="Path to the image")
-ap.add_argument("-x", "--part_x", required=True, help="Image name (relative)")
-ap.add_argument("-y", "--part_y", required=True, help="Image name (relative)")
-ap.add_argument("-c", "--center", required=True, help="Image name (relative)")
-ap.add_argument("-s", "--scale", required=True, help="Image name (relative)")
+#ap.add_argument("-i", "--image", required=True, help="Path to the image")
+#ap.add_argument("-x", "--part_x", required=True, help="Image name (relative)")
+#ap.add_argument("-y", "--part_y", required=True, help="Image name (relative)")
+#ap.add_argument("-c", "--center", required=True, help="Image name (relative)")
+#ap.add_argument("-s", "--scale", required=True, help="Image name (relative)")
+ap.add_argument("-d", "--dir", required=True, help="directory for annotations")
 args = vars(ap.parse_args())
 
-imgl = open(args["image"], "r")
-kpx = open(args["part_x"], "r")
-kpy = open(args["part_y"], "r")
-boxc = open(args["center"], "r")
-boxs = open(args["scale"], "r")
+imgl = open(args["dir"] + "img_names.txt", "r")
+kpx = open(args["dir"] + "kpx.txt", "r")
+kpy = open(args["dir"] + "kpy.txt", "r")
+boxc = open(args["dir"] + "centers.txt", "r")
+boxs = open(args["dir"] + "scale.txt", "r")
 
 
 reader = csv.reader(imgl, delimiter="\t")
