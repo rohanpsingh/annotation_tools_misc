@@ -63,8 +63,8 @@ assert len(imgnames) == len(kpxl) == len(kpyl) == len(centers) == len(scales)
 
 for i in range(0, len(imgnames)):
 
-        image = cv2.imread("/home/rohan/Desktop/tool_yellow_kp/JPEGImages/" + str(imgnames[i][0]))
-        print "/home/rohan/Desktop/tool_yellow_kp/JPEGImages/" + str(imgnames[i][0])
+        image = cv2.imread( str(imgnames[i][0]))
+        print str(imgnames[i][0])
         cpx = int(float(centers[i][0]))
         cpy = int(float(centers[i][1]))
         scale = float(scales[i][0])
