@@ -22,6 +22,9 @@ args = vars(ap.parse_args())
 image = cv2.imread(args["image"])
 clone = image.copy()
 
+imgw = 1./np.size(image,1)
+imgh = 1./np.size(image,0)
+print("imgsize:\t" + repr(1./imgw) + ", " + repr(1./imgh))
 
 def click_and_crop(event, x, y, flags, param):
 	# grab references to the global variables
@@ -49,6 +52,7 @@ def click_and_crop(event, x, y, flags, param):
 kp_file = open(args["data"] + "/savedata/keypoints/keypoints_" + args["file"] + ".csv", "w")
 center_file = open(args["data"] + "/savedata/center/center_" + args["file"] + ".csv", "w")
 scale_file = open(args["data"] + "/savedata/scale/scale_" + args["file"] + ".txt", "w")
+yolo_file = open(args["data"] + "/savedata/yolo_annot/yolo_" + args["file"] + ".txt", "w")
 
 def key_point(keyPt):
 	kp_file.write(repr(keyPt[0]) + "," + repr(keyPt[1]) + "\n")
@@ -61,6 +65,10 @@ def bbox_center(center):
 def bbox_scale(scale):
         scale_file.write(repr(scale) + "\n")
         print("scale: " + repr(scale))
+
+def yolo_bbox(center, w, h):
+        annotfile.write("0\t" + repr(center[0]) + "\t" + repr(center[1]) + "\t" + repr(w) + "\t" + repr(h) + "\n")
+        print("center: " + repr(center) + "\tw: " + repr(w) + "\th:" + repr(h))
 
  
 cv2.namedWindow("image", cv2.WINDOW_NORMAL)
@@ -117,6 +125,10 @@ while True:
 		bbox_center(center)
                 scale = max(wd,ht)/200.0
                 bbox_scale(scale)
+                wd *= imgw
+                ht *= imgh
+                center =  (imgw*(x_end + x_start)/2),(imgh*(y_end + y_start)/2)
+                yolo_bbox(center, wd, ht)
 		getROI = False
 
 	 
@@ -127,6 +139,7 @@ while True:
                 imgfile.close()
 		kp_file.close()
 		center_file.close()
+                yolo_file.close()
 		break
 
 cv2.destroyAllWindows()
