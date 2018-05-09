@@ -67,7 +67,7 @@ def bbox_scale(scale):
         print("scale: " + repr(scale))
 
 def yolo_bbox(center, w, h):
-        annotfile.write("0\t" + repr(center[0]) + "\t" + repr(center[1]) + "\t" + repr(w) + "\t" + repr(h) + "\n")
+        yolo_file.write("0\t" + repr(center[0]) + "\t" + repr(center[1]) + "\t" + repr(w) + "\t" + repr(h) + "\n")
         print("center: " + repr(center) + "\tw: " + repr(w) + "\th:" + repr(h))
 
  
