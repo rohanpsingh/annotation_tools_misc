@@ -16,7 +16,10 @@ Keyboard options for annotImg.py:
 "q" - save img name and go to next image
 
 General pipeline:  
-1.  ./script.sh  
+1.  ./script.sh --imgdir=$HOME/JPEGImages --start  
 2.  python collect.py --image ~/JPEGImages/
 3.  python visAnnot.py --dir ~/JPEGImages/savedata/
 4.  python split.py --dir ~/JPEGImages/savedata/
+
+To clean:
+./script.sh --imgdir=$HOME/JPEGImages --clean

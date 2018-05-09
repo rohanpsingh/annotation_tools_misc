@@ -1,19 +1,48 @@
 #!/usr/bin/env bash
 
-echo "generating annotations"
-#IMG_DIR="/home/rohan/rohan_m15x/dataset/yellow_tool/images1/frames"
-IMG_DIR="/home/rohan/Desktop/oppo_cam/JPEGImages"
 COUNT=0
 
-mkdir -p $IMG_DIR/savedata/keypoints
-mkdir -p $IMG_DIR/savedata/center
-mkdir -p $IMG_DIR/savedata/scale
+case $1 in
+    --imgdir=*)
+    IMG_DIR="${1#*=}"
+    case $2 in
+	--clean)
+	echo "cleaning.."
+	read -p "Are you sure you want to continue? <y/N> " prompt
+	if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]
+	then
+	    mkdir $IMG_DIR/trash_annot
+	    cp -r $IMG_DIR/savedata $IMG_DIR/trash_annot
+	    gvfs-trash $IMG_DIR/trash_annot
+	    rm -rf $IMG_DIR/savedata
+	    rm -rf *~
+	else
+	    exit 0
+	fi
+	;;
+	--start)
+	echo "generating annotations.."
+	mkdir -p $IMG_DIR/savedata/keypoints
+	mkdir -p $IMG_DIR/savedata/center
+	mkdir -p $IMG_DIR/savedata/scale
+	mkdir -p $IMG_DIR/savedata/yolo_annot
+	for img in $IMG_DIR/*; do 
+	    printf "\n\n$img\n"
+	    printf -v num '%05d' $COUNT
+	    python annotImg.py --image $img --file $num --data $IMG_DIR || break
+	    ((COUNT++))
+	done
+	;;
+	*)
+	echo "argument error"
+        # unknown option
+	;;
+    esac
+    ;;
+    *)
+    echo "argument error"
+    # unknown option
+    ;;
+esac
 
-for img in $IMG_DIR/IMG*; do 
 
-    printf "\n\n$img\n"
-    printf -v num '%05d' $COUNT
-    python annotImg.py --image $img --file $num --data $IMG_DIR || break
-    ((COUNT++))
-
-done
