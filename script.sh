@@ -26,10 +26,12 @@ case $1 in
 	mkdir -p $IMG_DIR/savedata/center
 	mkdir -p $IMG_DIR/savedata/scale
 	mkdir -p $IMG_DIR/savedata/yolo_annot
-	for img in $IMG_DIR/*; do 
+	for img in $IMG_DIR/frame_*; do 
 	    printf "\n\n$img\n"
+	    imgname=${img#$IMG_DIR/}
+	    imgname=${imgname%.jpg}
 	    printf -v num '%05d' $COUNT
-	    python annotImg.py --image $img --file $num --data $IMG_DIR || break
+	    python annotImg.py --image $imgname --file $num --data $IMG_DIR || break
 	    ((COUNT++))
 	done
 	;;

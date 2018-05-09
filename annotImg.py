@@ -19,7 +19,7 @@ ap.add_argument("-d", "--data", required=True, help="Path to savedata")
 args = vars(ap.parse_args())
  
 # load the image, clone it, and setup the mouse callback function
-image = cv2.imread(args["image"])
+image = cv2.imread(args["data"] + "/" + args["image"] + ".jpg")
 clone = image.copy()
 
 imgw = 1./np.size(image,1)
@@ -52,7 +52,7 @@ def click_and_crop(event, x, y, flags, param):
 kp_file = open(args["data"] + "/savedata/keypoints/keypoints_" + args["file"] + ".csv", "w")
 center_file = open(args["data"] + "/savedata/center/center_" + args["file"] + ".csv", "w")
 scale_file = open(args["data"] + "/savedata/scale/scale_" + args["file"] + ".txt", "w")
-yolo_file = open(args["data"] + "/savedata/yolo_annot/yolo_" + args["file"] + ".txt", "w")
+yolo_file = open(args["data"] + "/savedata/yolo_annot/" + args["image"] + ".txt", "w")
 
 def key_point(keyPt):
 	kp_file.write(repr(keyPt[0]) + "," + repr(keyPt[1]) + "\n")
@@ -135,7 +135,7 @@ while True:
 	# if the 'q' key is pressed, break from the loop
 	elif key == ord("q"):
                 imgfile = open(args["data"] + "/savedata/img_names.txt", "a")
-                imgfile.write(args["image"] + "\n")
+                imgfile.write(args["data"] + "/" + args["image"] + ".jpg" + "\n")
                 imgfile.close()
 		kp_file.close()
 		center_file.close()
