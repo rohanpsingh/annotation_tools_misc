@@ -13,18 +13,20 @@ refPt = []
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", required=True, help="Path to the image")
-ap.add_argument("-f", "--file", required=True, help="Image name (relative)")
-ap.add_argument("-d", "--data", required=True, help="Path to savedata")
+ap.add_argument("-i", "--image", required=True, help="Image name")
+ap.add_argument("-f", "--file", required=True, help="Image count")
+ap.add_argument("-d", "--data", required=True, help="Path to image dir")
+ap.add_argument("-k", "--kpts", required=True, help="Total number of keypoints")
 args = vars(ap.parse_args())
- 
+
+tot_keypoints = int(args["kpts"])
+
 # load the image, clone it, and setup the mouse callback function
 image = cv2.imread(args["data"] + "/" + args["image"] + ".jpg")
 clone = image.copy()
 
 imgw = 1./np.size(image,1)
 imgh = 1./np.size(image,0)
-print("imgsize:\t" + repr(1./imgw) + ", " + repr(1./imgh))
 
 def click_and_crop(event, x, y, flags, param):
 	# grab references to the global variables
@@ -54,9 +56,9 @@ center_file = open(args["data"] + "/savedata/center/center_" + args["file"] + ".
 scale_file = open(args["data"] + "/savedata/scale/scale_" + args["file"] + ".txt", "w")
 yolo_file = open(args["data"] + "/savedata/yolo_annot/" + args["image"] + ".txt", "w")
 
-def key_point(keyPt):
+def key_point(keyPt, n):
 	kp_file.write(repr(keyPt[0]) + "," + repr(keyPt[1]) + "\n")
-	print("keypt: " + repr(keyPt))
+	print("keypt: " + repr(n) + "\t" + repr(keyPt))
 
 def bbox_center(center):
 	center_file.write(repr(center[0]) + "," + repr(center[1]) + "\n")
@@ -75,6 +77,7 @@ cv2.namedWindow("image", cv2.WINDOW_NORMAL)
 cv2.resizeWindow("image", 3000,2000)
 cv2.setMouseCallback("image", click_and_crop)
  
+kp_count = 0
 # keep looping until the 'q' key is pressed
 while True:
 
@@ -101,16 +104,26 @@ while True:
  
 	# if the 'n' key is pressed
 	if key == ord("n"):
-		image = clone.copy()
-		keyPt = ((x_end + x_start)/2),((y_end + y_start)/2)
-		key_point(keyPt)
-		getROI = False
+                kp_count += 1
+                image = clone.copy()
+                keyPt = ((x_end + x_start)/2),((y_end + y_start)/2)
+                key_point(keyPt,kp_count)
+                getROI = False
+                if kp_count == tot_keypoints:
+                        imgfile = open(args["data"] + "/savedata/img_names.txt", "a")
+                        imgfile.write(args["data"] + "/" + args["image"] + ".jpg" + "\n")
+                        imgfile.close()
+                        kp_file.close()
+                        center_file.close()
+                        yolo_file.close()
+                        break
 
 	# if the 's' key is pressed
-	if key == ord("s"):
+        if key == ord("s"):
+                kp_count += 1
 		image = clone.copy()
 		keyPt = -1,-1
-		key_point(keyPt)
+		key_point(keyPt,kp_count)
 		getROI = False
 	
 
@@ -119,8 +132,6 @@ while True:
 		image = clone.copy()
                 wd = abs(x_end - x_start)
                 ht = abs(y_end - y_start)
-                print(wd)
-                print(ht)
 		center =  ((x_end + x_start)/2),((y_end + y_start)/2)
 		bbox_center(center)
                 scale = max(wd,ht)/200.0

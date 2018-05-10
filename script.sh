@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
+START_COUNT=21
 COUNT=0
+TOT_KEYPOINTS=20
 
 case $1 in
     --imgdir=*)
@@ -27,11 +29,15 @@ case $1 in
 	mkdir -p $IMG_DIR/savedata/scale
 	mkdir -p $IMG_DIR/savedata/yolo_annot
 	for img in $IMG_DIR/frame_*; do 
-	    printf "\n\n$img\n"
+	    echo $COUNT
+	    if (( $COUNT >= $START_COUNT ))
+	    then
+	    printf "$img\n-----\n\n"
 	    imgname=${img#$IMG_DIR/}
 	    imgname=${imgname%.jpg}
 	    printf -v num '%05d' $COUNT
-	    python annotImg.py --image $imgname --file $num --data $IMG_DIR || break
+	    python annotImg.py --image $imgname --file $num --data $IMG_DIR --kpts $TOT_KEYPOINTS || break
+	    fi
 	    ((COUNT++))
 	done
 	;;
