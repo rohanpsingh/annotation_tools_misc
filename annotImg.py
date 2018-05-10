@@ -72,6 +72,17 @@ def yolo_bbox(center, w, h):
         yolo_file.write("0\t" + repr(center[0]) + "\t" + repr(center[1]) + "\t" + repr(w) + "\t" + repr(h) + "\n")
         print("center: " + repr(center) + "\tw: " + repr(w) + "\th:" + repr(h))
 
+def write_img_name(line_number):
+        with open(args["data"] + "/savedata/img_names.txt", "r") as imgfile:
+                lines = imgfile.readlines()
+        if line_number==len(lines):
+                with open(args["data"] + "/savedata/img_names.txt", "a") as imgfile:
+                        imgfile.write(args["data"] + "/" + args["image"] + ".jpg" + "\n")
+        else:
+                lines[line_number] = args["data"] + "/" + args["image"] + ".jpg" + "\n"
+                with open(args["data"] + "/savedata/img_names.txt", "w") as imgfile:
+                        imgfile.writelines(lines)
+        
  
 cv2.namedWindow("image", cv2.WINDOW_NORMAL)
 cv2.resizeWindow("image", 3000,2000)
@@ -110,9 +121,7 @@ while True:
                 key_point(keyPt,kp_count)
                 getROI = False
                 if kp_count == tot_keypoints:
-                        imgfile = open(args["data"] + "/savedata/img_names.txt", "a")
-                        imgfile.write(args["data"] + "/" + args["image"] + ".jpg" + "\n")
-                        imgfile.close()
+                        write_img_name(int(args["file"]))
                         kp_file.close()
                         center_file.close()
                         yolo_file.close()
@@ -125,6 +134,12 @@ while True:
 		keyPt = -1,-1
 		key_point(keyPt,kp_count)
 		getROI = False
+                if kp_count == tot_keypoints:
+                        write_img_name(int(args["file"]))
+                        kp_file.close()
+                        center_file.close()
+                        yolo_file.close()
+                        break
 	
 
 	# if the 'b' key is pressed
@@ -145,9 +160,11 @@ while True:
 	 
 	# if the 'q' key is pressed, break from the loop
 	elif key == ord("q"):
-                imgfile = open(args["data"] + "/savedata/img_names.txt", "a")
-                imgfile.write(args["data"] + "/" + args["image"] + ".jpg" + "\n")
-                imgfile.close()
+                while kp_count<tot_keypoints:
+                        kp_count += 1
+                        keyPt = -1,-1
+                        key_point(keyPt,kp_count)
+                write_img_name(int(args["file"]))
 		kp_file.close()
 		center_file.close()
                 yolo_file.close()
