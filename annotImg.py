@@ -3,6 +3,7 @@
 import argparse
 import cv2
 import numpy as np
+import os
  
 # initialize the list of reference points and boolean indicating
 # whether cropping is being performed or not
@@ -73,20 +74,23 @@ def yolo_bbox(center, w, h):
         print("center: " + repr(center) + "\tw: " + repr(w) + "\th:" + repr(h))
 
 def write_img_name(line_number):
-        with open(args["data"] + "/savedata/img_names.txt", "r") as imgfile:
+        file_path = args["data"] + "/savedata/img_names.txt"
+        if not os.path.exists(file_path):
+                open(file_path, "w")
+        with open(file_path, "r") as imgfile:
                 lines = imgfile.readlines()
         if line_number==len(lines):
-                with open(args["data"] + "/savedata/img_names.txt", "a") as imgfile:
+                with open(file_path, "a") as imgfile:
                         imgfile.write(args["data"] + "/" + args["image"] + ".jpg" + "\n")
         else:
                 lines[line_number] = args["data"] + "/" + args["image"] + ".jpg" + "\n"
-                with open(args["data"] + "/savedata/img_names.txt", "w") as imgfile:
+                with open(file_path, "w") as imgfile:
                         imgfile.writelines(lines)
         
  
-cv2.namedWindow("image", cv2.WINDOW_NORMAL)
-cv2.resizeWindow("image", 3000,2000)
-cv2.setMouseCallback("image", click_and_crop)
+cv2.namedWindow(args["image"], cv2.WINDOW_NORMAL)
+cv2.resizeWindow(args["image"], 3000,2000)
+cv2.setMouseCallback(args["image"], click_and_crop)
  
 kp_count = 0
 # keep looping until the 'q' key is pressed
@@ -95,15 +99,15 @@ while True:
 	i = image.copy()
 
 	if not cropping and not getROI:
-		cv2.imshow("image", image)
+		cv2.imshow(args["image"], image)
 
 	elif cropping and not getROI:
 		cv2.rectangle(i, (x_start, y_start), (x_end, y_end), (0, 255, 0), 2)
-		cv2.imshow("image", i)
+		cv2.imshow(args["image"], i)
 
 	elif not cropping and getROI:
 		cv2.rectangle(image, (x_start, y_start), (x_end, y_end), (0, 255, 0), 2)
-		cv2.imshow("image", image)
+		cv2.imshow(args["image"], image)
 
 	key = cv2.waitKey(1) & 0xFF
 

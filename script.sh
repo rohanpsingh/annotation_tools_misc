@@ -16,7 +16,22 @@ case $1 in
 	    cp -r $IMG_DIR/savedata $IMG_DIR/trash_annot
 	    gvfs-trash $IMG_DIR/trash_annot
 	    rm -rf $IMG_DIR/savedata
-	    rm -rf *~
+	else
+	    exit 0
+	fi
+	;;
+	--super_clean)
+	echo "cleaning.."
+	read -p "Are you sure you want to continue? <y/N> " prompt
+	if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]
+	then
+	    read -p "There is NO turning back. Are you sure!!? <y/N> " prompt
+	    if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]]
+	    then
+		rm -rf $IMG_DIR/savedata
+	    else
+		exit 0
+	    fi
 	else
 	    exit 0
 	fi
