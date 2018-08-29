@@ -11,6 +11,8 @@ import numpy as np
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required=True, help="Path to the image directory")
 ap.add_argument("-b", "--bbox", required=True, help="Path to label directory")
+ap.add_argument("-c", "--class", required=True, help="Select class to visualize")
+ap.add_argument("-s", "--sec", required=True, help="Delay for visualization")
 args = vars(ap.parse_args())
 
 
@@ -26,7 +28,6 @@ def draw_bbox(image, center, w, h):
 cv2.namedWindow("win", cv2.WINDOW_NORMAL)
 cv2.resizeWindow("win", 1000,700)
 
-i = 0
 for img in os.listdir(args["image"]):
         if img.endswith("jpg"):
                 print(os.path.splitext(img)[0])
@@ -37,16 +38,14 @@ for img in os.listdir(args["image"]):
                 reader = csv.reader(bbox, delimiter="\t")
                 label = list(reader)
                 for i in range(0,len(label)):
-                        cpx = int(float(label[i][1]) * imgw)
-                        cpy = int(float(label[i][2]) * imgh)
-                        w =  int(float(label[i][3]) * imgw)
-                        h =  int(float(label[i][4]) * imgh)
-                        image = draw_bbox(image, (cpx,cpy), w, h)
+                        if int(label[i][0])==int(args["class"]):
+                                cpx = int(float(label[i][1]) * imgw)
+                                cpy = int(float(label[i][2]) * imgh)
+                                w =  int(float(label[i][3]) * imgw)
+                                h =  int(float(label[i][4]) * imgh)
+                                image = draw_bbox(image, (cpx,cpy), w, h)
                 cv2.imshow("win", image)
-                cv2.waitKey(0)
-                i += 1
-
-
+                cv2.waitKey(int(args["sec"]))
         
         
 cv2.destroyAllWindows()
