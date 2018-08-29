@@ -28,22 +28,23 @@ cv2.resizeWindow("win", 1000,700)
 
 i = 0
 for img in os.listdir(args["image"]):
-
-	print(os.path.splitext(img)[0])
-        image = cv2.imread(os.path.join(args["image"], img))
-        imgh = int(np.size(image,0))
-        imgw = int(np.size(image,1))
-	bbox = open(os.path.join(args["bbox"], os.path.splitext(img)[0]) + ".txt", "r")
-	reader = csv.reader(bbox, delimiter="\t")
-	label = list(reader)
-        cpx = int(float(label[0][1]) * imgw)
-        cpy = int(float(label[0][2]) * imgh)
-        w =  int(float(label[0][3]) * imgw)
-        h =  int(float(label[0][4]) * imgh)
-        image = draw_bbox(image, (cpx,cpy), w, h)
-        cv2.imshow("win", image)
-        cv2.waitKey(0)
-	i += 1
+        if img.endswith("jpg"):
+                print(os.path.splitext(img)[0])
+                image = cv2.imread(os.path.join(args["image"], img))
+                imgh = int(np.size(image,0))
+                imgw = int(np.size(image,1))
+                bbox = open(os.path.join(args["bbox"], os.path.splitext(img)[0]) + ".txt", "r")
+                reader = csv.reader(bbox, delimiter="\t")
+                label = list(reader)
+                for i in range(0,len(label)):
+                        cpx = int(float(label[i][1]) * imgw)
+                        cpy = int(float(label[i][2]) * imgh)
+                        w =  int(float(label[i][3]) * imgw)
+                        h =  int(float(label[i][4]) * imgh)
+                        image = draw_bbox(image, (cpx,cpy), w, h)
+                cv2.imshow("win", image)
+                cv2.waitKey(0)
+                i += 1
 
 
         
